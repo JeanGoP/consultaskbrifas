@@ -1,29 +1,36 @@
-# Usa una imagen base de Python
+# Usa una imagen base compatible con Microsoft SQL Server ODBC
 FROM python:3.11-slim
 
-# Instalar dependencias necesarias para el controlador ODBC
+# Instala dependencias necesarias
 RUN apt-get update && apt-get install -y \
-    curl apt-transport-https gnupg2 unixodbc unixodbc-dev libgssapi-krb5-2
+    apt-transport-https \
+    curl \
+    gnupg \
+    unixodbc \
+    unixodbc-dev \
+    libgssapi-krb5-2 \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Agregar el repositorio de Microsoft e instalar el controlador ODBC Driver 17
+# Configura el repositorio de Microsoft para msodbcsql17
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
-# Limpiar archivos innecesarios
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Verifica la instalación del driver
+RUN odbcinst -j && ls /usr/lib/x86_64-linux-gnu/ | grep odbc
 
-# Configurar directorio de trabajo
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de la aplicación
+# Copia los archivos de la aplicación
 COPY . /app
 
-# Instalar dependencias de Python
-RUN pip install --no-cache-dir -r requirements.txt
+# Instala las dependencias de Python
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Exponer el puerto donde correrá la app Flask
+# Expone el puerto para Flask
 EXPOSE 5000
 
-# Ejecutar la aplicación con Gunicorn
+# Ejecuta la aplicación Flask con Gunicorn
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
