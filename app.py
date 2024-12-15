@@ -16,11 +16,11 @@ db_config = {
 def get_db_connection():
     try:
         conn = pyodbc.connect(
-            f"DRIVER={db_config['driver']};"
-            f"SERVER={db_config['server']};"
-            f"DATABASE={db_config['database']};"
-            f"USERNAME={db_config['username']};"
-            f"PASSWORD={db_config['password']}"
+            f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+            f"SERVER={os.getenv('DB_SERVER')};"
+            f"DATABASE={os.getenv('DB_NAME')};"
+            f"UID={os.getenv('DB_USER')};"
+            f"PWD={os.getenv('DB_PASSWORD')}"
         )
         return conn
     except pyodbc.Error as e:
