@@ -19,12 +19,13 @@ def get_db_connection():
             f"DRIVER={db_config['driver']};"
             f"SERVER={db_config['server']};"
             f"DATABASE={db_config['database']};"
-            f"DB_USER={db_config['username']};"
+            f"UID={db_config['username']};"
             f"PWD={db_config['password']}"
         )
         return conn
     except pyodbc.Error as e:
         raise Exception(f"Error al conectar con la base de datos: {str(e)}")
+
 
 # Ruta para servir el archivo HTML principal
 @app.route('/')
@@ -38,12 +39,10 @@ def consulta_rifa():
     identificacion = data.get('identificacion')
     email = data.get('email')
 
-    # Validación de parámetros
     if not identificacion or not email:
         return jsonify({"error": "Identificación y correo electrónico son requeridos"}), 400
 
     try:
-        # Conexión y consulta a la base de datos
         with get_db_connection() as conn:
             with conn.cursor() as cursor:
                 query = """
@@ -52,16 +51,18 @@ def consulta_rifa():
                 INNER JOIN Cargos c ON n.id_transaction = c.id_transaction
                 WHERE c.number = ? AND c.ClienteEmail = ?
                 """
+                print(f"Executing query with params: {identificacion}, {email}")
                 cursor.execute(query, (identificacion, email))
                 numeros = [row[0] for row in cursor.fetchall()]
 
-        # Respuesta adecuada si no se encuentran resultados
         if not numeros:
             return jsonify({"mensaje": "No se encontraron números de rifa para la identificación proporcionada"}), 404
 
         return jsonify({"numeros": numeros})
     except Exception as e:
+        print(f"Database error: {str(e)}")
         return jsonify({"error": f"Ha ocurrido un error: {str(e)}"}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
