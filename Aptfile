@@ -1,3 +1,5 @@
 unixodbc
 unixodbc-dev
+curl
+https://packages.microsoft.com/config/ubuntu/20.04/prod.list
 msodbcsql17
