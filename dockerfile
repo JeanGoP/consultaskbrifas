@@ -1,19 +1,28 @@
-# Usa una imagen base de Python
-FROM python:3.11-slim
+FROM python:3.10-slim
 
-# Establece el directorio de trabajo
+# Instalar dependencias necesarias
+RUN apt-get update && apt-get install -y \
+    curl apt-transport-https unixodbc unixodbc-dev gnupg2
+
+# Agregar el repositorio de Microsoft para el controlador ODBC
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
+
+# Limpiar para reducir el tamaño de la imagen
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Configurar directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos al contenedor
+# Copiar los archivos de la aplicación
 COPY . /app
 
-# Instala las dependencias
+# Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expone el puerto de Flask
+# Exponer el puerto
 EXPOSE 5000
 
-# Comando para iniciar la aplicación
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
-
-RUN chmod +x install_msodbcsql.sh && ./install_msodbcsql.sh
+# Ejecutar la aplicación Flask usando Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
