@@ -1,35 +1,30 @@
-# Usa una imagen base compatible
-FROM python:3.11-slim
+# Imagen base de Ubuntu
+FROM ubuntu:20.04
+
+# Configuración para evitar preguntas interactivas
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Instala dependencias necesarias
 RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg \
-    unixodbc \
-    unixodbc-dev \
-    libgssapi-krb5-2 \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+    curl gnupg apt-transport-https \
+    unixodbc-dev libssl1.1 \
+    python3 python3-pip python3-dev \
+    gcc g++ make
 
-# Configura el repositorio de Microsoft y agrega el driver
+# Agrega el repositorio de Microsoft para ODBC Driver 17
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
-# Verifica la instalación del driver
-RUN odbcinst -j && ls /usr/lib/x86_64-linux-gnu/ | grep msodbcsql
-
-# Establece el directorio de trabajo
+# Configura el entorno de Python y las dependencias
 WORKDIR /app
-
-# Copia los archivos de la aplicación
 COPY . /app
 
 # Instala las dependencias de Python
-RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Expone el puerto para Flask
 EXPOSE 5000
 
-# Ejecuta la aplicación Flask con Gunicorn
+# Comando para iniciar la aplicación Flask
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
