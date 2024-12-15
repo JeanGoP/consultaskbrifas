@@ -15,3 +15,5 @@ EXPOSE 5000
 
 # Comando para iniciar la aplicación
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+
+RUN chmod +x install_msodbcsql.sh && ./install_msodbcsql.sh
