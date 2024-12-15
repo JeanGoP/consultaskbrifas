@@ -6,7 +6,7 @@ app = Flask(__name__, static_folder='static')
 
 # Configuración de la base de datos (debería estar en variables de entorno para mayor seguridad)
 db_config = {
-    'driver': 'SQL Server',
+    'driver': 'ODBC Driver 17 for SQL Server',
     'server': 'stecno.dyndns.org',
     'database': 'kbrifas',
     'username': 'sa',
