@@ -1,11 +1,11 @@
 document.getElementById('consultaForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Evitar que el formulario recargue la página
 
     const parametro1 = document.getElementById('parametro1').value;
     const parametro2 = document.getElementById('parametro2').value;
 
     try {
-        const response = await fetch('http://localhost:3000/consulta', {
+        const response = await fetch('/consulta', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ function mostrarResultados(data) {
         return;
     }
 
-    // Muestra los números separados por comas
+    // Mostrar resultados separados por comas
     const numeros = data.map((row) => row.numero).join(', ');
-    resultadosDiv.textContent = `Números para el sorteo: ${numeros}`;
+    resultadosDiv.textContent = `Números encontrados: ${numeros}`;
 }
