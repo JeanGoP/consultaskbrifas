@@ -1,0 +1,107 @@
+/* Estilo base */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+input, button {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#resultados {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Estilo para tablas en los resultados */
+#resultados ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#resultados li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Media Queries para Responsividad */
+
+/* Dispositivos pequeños (teléfonos) */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    label, input, button {
+        font-size: 0.9rem;
+    }
+
+    button {
+        padding: 8px;
+    }
+}
+
+/* Dispositivos muy pequeños (teléfonos pequeños) */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    button {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+}

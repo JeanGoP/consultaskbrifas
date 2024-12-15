@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta SQL</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta KB RIFAS</h1>
+        <form id="consultaForm">
+            <label for="parametro1">Identificación:</label>
+            <input type="text" id="parametro1" name="parametro1" required>
+
+            <label for="parametro2">Email del Cliente:</label>
+            <input type="text" id="parametro2" name="parametro2" required>
+
+            <button type="submit">Consultar</button>
+        </form>
+        <div id="resultados"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
