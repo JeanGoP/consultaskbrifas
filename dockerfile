@@ -1,24 +1,23 @@
-# Usa una imagen base compatible con Microsoft SQL Server ODBC
+# Usa una imagen base compatible
 FROM python:3.11-slim
 
 # Instala dependencias necesarias
 RUN apt-get update && apt-get install -y \
-    apt-transport-https \
     curl \
     gnupg \
     unixodbc \
     unixodbc-dev \
     libgssapi-krb5-2 \
-    build-essential \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Configura el repositorio de Microsoft para msodbcsql17
+# Configura el repositorio de Microsoft y agrega el driver
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
 # Verifica la instalación del driver
-RUN odbcinst -j && ls /usr/lib/x86_64-linux-gnu/ | grep odbc
+RUN odbcinst -j && ls /usr/lib/x86_64-linux-gnu/ | grep msodbcsql
 
 # Establece el directorio de trabajo
 WORKDIR /app
