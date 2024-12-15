@@ -19,7 +19,7 @@ def get_db_connection():
             f"DRIVER={db_config['driver']};"
             f"SERVER={db_config['server']};"
             f"DATABASE={db_config['database']};"
-            f"USER={db_config['username']};"
+            f"DB_USER={db_config['username']};"
             f"PWD={db_config['password']}"
         )
         return conn
