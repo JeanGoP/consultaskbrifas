@@ -1,4 +1,2 @@
 unixodbc-dev
-odbcinst1debian2
-odbcinst
-msodbcsql17
+libodbcinst2
