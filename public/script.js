@@ -35,5 +35,5 @@ function mostrarResultados(data) {
 
     // Mostrar resultados separados por comas
     const numeros = data.map((row) => row.numero).join(', ');
-    resultadosDiv.textContent = `Números encontrados: ${numeros}`;
+    resultadosDiv.textContent = `Números para el sorteo: ${numeros}`;
 }
