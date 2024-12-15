@@ -1,23 +1,25 @@
+# Usa una imagen oficial de Python
 FROM python:3.10-slim
 
-# Instalar dependencias del sistema
+# Instala las dependencias necesarias para ODBC
 RUN apt-get update && apt-get install -y \
-    curl \
-    unixodbc \
     unixodbc-dev \
-    gnupg \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
+    curl && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
-# Crear directorio de trabajo
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos de la aplicación
+# Copia los archivos de tu aplicación
 COPY . .
 
-# Instalar dependencias de Python
-RUN pip install -r requirements.txt
+# Instala las dependencias de Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Exponer el puerto 5000 para Flask
+EXPOSE 5000
 
 # Comando para ejecutar la aplicación
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
